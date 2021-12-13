@@ -1,6 +1,22 @@
-const connection = require('./connection');
-const { prompt } = require("inquirer");
 
+const mysql2 = require('mysql2');
+// const connection = require('./connection');
+// const { prompt } = require("inquirer");
+require('console.table');
+
+const connection = mysql2.createConnection({
+    host: 'localhost',
+    user: 'root',
+    password: 'password',
+    database: 'employees'
+});
+
+
+
+module.exports = connection;
+// const connection = require('./connection');
+const { prompt } = require("inquirer");
+// const temp = require('./employeeroute.js');
 
 const ogPrompt = () => {
     prompt([
@@ -32,11 +48,60 @@ const ogPrompt = () => {
             break;
         default:
             //change
-          printEmployeePage();
           break;
       }
     });
   };
   
   ogPrompt();
-  
+
+function viewDepartments() {
+    //   return console.log("here");
+    connection.query((`SELECT * FROM department`), (error, result) => {
+        if(error){
+            console.log(error)}
+        else{ 
+            console.table(result);
+        }
+    ogPrompt();
+    })};
+function viewRoles(){
+    connection.query((`SELECT * FROM role`), (error, result) => {
+        if(error){
+            console.log(error)}
+        else{ 
+            console.table(result);
+        }
+    ogPrompt();
+    })};
+function viewEmployees(){
+    connection.query((`SELECT * FROM employee`), (error, result) => {
+        if(error){
+            console.log(error)}
+        else{ 
+            console.table(result);
+        }
+    ogPrompt();
+    })};
+function addDepartment(){ 
+    prompt([
+        {
+          type: "input",
+          name: "departmentAdded",
+          message: "What is the name of the department?",
+        }
+    ]).then(({departmentAdded})=>{
+        connection.query(`(INSERT INTO department SET name = ${departmentAdded})`), (error, result) => {
+        if(error){
+            console.log(error)
+            ogPrompt();
+        }
+        else{ 
+            console.table(result);
+            ogPrompt();
+        }
+    }
+    })  
+    };
+
+
