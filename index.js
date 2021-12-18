@@ -28,6 +28,8 @@ const ogPrompt = () => {
         "Add a Department",
         "Add a Role",
         "Update an Employee Role",
+        "View Employees by Manager",
+        "View Employees by Role",
       ],
     },
   ]).then(({ choice }) => {
@@ -50,6 +52,13 @@ const ogPrompt = () => {
       case "Add a Role":
         addRole();
         break;
+      case "View Employees by Manager":
+        viewEbyM();
+        break;
+      case "View Employees by Role":
+        viewEbyR();
+        break;
+
       default:
         //change
         break;
@@ -171,4 +180,48 @@ function updateEmployeeRole() {
     );
   });
 }
-
+function viewEbyM() {
+    prompt([
+        {
+          type: "input",
+          name: "manager_id",
+          message: "What is the manager's employee id?",
+        }
+      ]).then(({manager_id}) => {
+        connection.query(
+          `SELECT * FROM employee WHERE manager_id = ${manager_id}`,
+          (error, result) => {
+            if (error) {
+              console.log(error);
+              ogPrompt();
+            } else {
+              console.table(result);
+              ogPrompt();
+            }
+          }
+        );
+      });
+}
+function viewEbyR(){
+    prompt([
+        {
+          type: "input",
+          name: "role_id",
+          message: "What is the role id of the department you want to view?",
+        }
+      ]).then(({role_id}) => {
+        connection.query(
+          `SELECT * FROM employee WHERE role_id = ${role_id}`,
+          (error, result) => {
+            if (error) {
+              console.log(error);
+              ogPrompt();
+            } else {
+              console.table(result);
+              ogPrompt();
+            }
+          }
+        );
+      });
+     
+}
