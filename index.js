@@ -30,6 +30,7 @@ const ogPrompt = () => {
         "Update an Employee Role",
         "View Employees by Manager",
         "View Employees by Role",
+        "Add an Employee"
       ],
     },
   ]).then(({ choice }) => {
@@ -57,6 +58,9 @@ const ogPrompt = () => {
         break;
       case "View Employees by Role":
         viewEbyR();
+        break;
+      case "Add an Employee":
+          addEmployee();
         break;
 
       default:
@@ -224,4 +228,39 @@ function viewEbyR(){
         );
       });
      
+}
+function addEmployee(){
+    prompt([
+        {
+          type: "input",
+          name: "first_name",
+          message: "What is the first name of the employee you want to add?",
+        },
+        {
+            type: "input",
+            name: "last_name",
+            message: "What is the last name of the employee you want to add?",
+          },
+          {
+            type: "input",
+            name: "role_id",
+            message: "What is the role id of the employee you want to add?",
+          },
+          {
+            type: "input",
+            name: "manager_id",
+            message: "What is the manager id of the employee you want to add?",
+          },
+      ]).then(({first_name, last_name, role_id, manager_id }) => {
+        connection.query(
+          `INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES ('${first_name}', '${last_name}', '${role_id}','${manager_id}')`,
+          (error, result) => {
+            if (error) {
+                console.log(error);
+            } 
+            viewEmployees();
+            ogPrompt();
+          }
+        );
+      });
 }
